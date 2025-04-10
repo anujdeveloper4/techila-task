@@ -12,7 +12,7 @@ class ProfileCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Get.to(() => ProfileDetailPage(user: user));
+        Get.to(() => GithubProfilePage(user: user));
       },
       child: Card(
         elevation: 8,
@@ -156,4 +156,4 @@ class ProfileCard extends StatelessWidget {
       ),
     );
   }
-} 
+}

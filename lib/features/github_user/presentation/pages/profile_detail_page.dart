@@ -1,256 +1,218 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
-import '../../domain/models/github_user_model.dart';
+import 'package:techilatask/features/github_user/domain/models/github_user_model.dart';
 
-class ProfileDetailPage extends StatelessWidget {
-  final GitHubUser user;
-
-  const ProfileDetailPage({super.key, required this.user});
+class GithubProfilePage extends StatelessWidget {
+  GitHubUser user;
+  GithubProfilePage({super.key,required this.user});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
+        title: const Text(''),
         backgroundColor: Colors.black,
-        elevation: 0,
-        leading: const BackButton(color: Colors.blue),
-        title: Text(user.login, style: const TextStyle(color: Colors.white)),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.more_horiz, color: Colors.blue),
-            onPressed: () {},
-          ),
+        leading: const BackButton(color: Colors.white),
+        actions: const [
+          Icon(Icons.more_horiz, color: Colors.white),
+          SizedBox(width: 16),
         ],
       ),
       body: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Center(
-                    child: Container(
-                      width: 96,
-                      height: 96,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                          image: NetworkImage(user.avatarUrl),
-                          fit: BoxFit.cover,
-                        ),
-                        border: Border.all(
-                          color: Colors.grey[800]!,
-                          width: 2,
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 16),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        '${user.followers}',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const Text(
-                        ' followers · ',
-                        style: TextStyle(color: Colors.grey),
-                      ),
-                      Text(
-                        '${user.following}',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const Text(
-                        ' following',
-                        style: TextStyle(color: Colors.grey),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      for (int i = 0; i < 3; i++)
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                          child: CircleAvatar(
-                            radius: 16,
-                            backgroundColor: Colors.grey[800],
-                            child: const Icon(Icons.star, size: 16, color: Colors.yellow),
-                          ),
-                        ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              width: double.infinity,
-              margin: const EdgeInsets.symmetric(horizontal: 16),
-              padding: const EdgeInsets.symmetric(vertical: 12),
-              decoration: BoxDecoration(
-                color: Colors.grey[850],
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: const Center(
-                child: Text(
-                  '+ Follow',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                  ),
+            // Profile Header
+            Row(
+              children: [
+                CircleAvatar(
+                  radius: 36,
+                  backgroundImage: NetworkImage(user.avatarUrl),
+                  backgroundColor: Colors.transparent,
                 ),
-              ),
-            ),
-            const SizedBox(height: 24),
-            _buildSection(
-              'Repositories',
-              '${user.publicRepos}',
-              Icons.book_outlined,
-            ),
-            _buildSection('Starred', '3', Icons.star_border),
-            _buildSection('Organizations', '0', Icons.business),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Popular',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
+                const SizedBox(width: 12),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children:  [
+                    Text(
+                      user.name,
+                      style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold),
                     ),
+                    const Text("octocat", style: TextStyle(color: Colors.grey)),
+                  ],
+                )
+              ],
+            ),
+            const SizedBox(height: 16),
+
+            // Info
+            Row(children:  [
+              const Icon(Icons.apartment, color: Colors.grey, size: 16),
+              SizedBox(width: 4),
+              const Text("@github", style: TextStyle(color: Colors.white,fontSize: 16)),
+              SizedBox(width: 12),
+              Icon(Icons.location_on, color: Colors.grey, size: 16),
+              SizedBox(width: 4),
+              Text(user.location??"San Francisco", style: TextStyle(color: Colors.white,fontSize: 16)),
+            ]),
+            const SizedBox(height: 6),
+            Row(children:  [
+              Icon(Icons.link, color: Colors.grey, size: 16),
+              SizedBox(width: 4),
+              Text("github.blog", style: TextStyle(color: Colors.blue,fontSize: 16)),
+              SizedBox(width: 12),
+              Icon(Icons.email, color: Colors.grey, size: 16),
+              SizedBox(width: 4),
+              Text(user.email??"", style: TextStyle(color: Colors.white,fontSize: 16)),
+            ]),
+            const SizedBox(height: 6),
+            Row(children:  [
+              Icon(Icons.group, color: Colors.grey, size: 16),
+              SizedBox(width: 4),
+              Text(user.followers.toString()??"", style: TextStyle(color: Colors.white,fontSize: 16)),
+              Text(" followers · ", style: TextStyle(color: Colors.grey,fontSize: 16)),
+              Text(user.following.toString()??"", style: TextStyle(color: Colors.white,fontSize: 16)),
+              Text(" following", style: TextStyle(color: Colors.grey,fontSize: 16)),
+            ]),
+            const SizedBox(height: 12),
+
+            // Achievements
+            Row(
+              children: List.generate(3, (index) {
+                return Padding(
+                  padding: const EdgeInsets.only(right: 8),
+                  child: CircleAvatar(
+                    radius: 16,
+                    backgroundColor: Colors.white,
+                    child: Icon(Icons.emoji_events, color: Colors.black),
                   ),
-                  const SizedBox(height: 16),
-                  _buildRepositoryCard(
-                    'Spoon-Knife',
-                    'This repo is for demonstration purposes only.',
-                    '12,932',
-                    'HTML',
-                  ),
-                ],
+                );
+              }),
+            ),
+            const SizedBox(height: 16),
+
+            // Follow Button
+            followButton(),
+            const SizedBox(height: 16),
+
+            // Repo Stats
+            _buildTile("Repositories", "8", Icons.storage, const Color(0xFF3A3A3C)),
+            _buildTile("Starred", "3", Icons.star, Colors.amber),
+            _buildTile("Organizations", "0", Icons.apartment, Colors.deepOrange),
+
+            const SizedBox(height: 16),
+            const Text("Popular", style: TextStyle(color: Colors.grey)),
+            const SizedBox(height: 8),
+
+            // Horizontal Scroll for Popular Repos
+            SizedBox(
+              height: 120,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: 5,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.only(right: 12),
+                    child: _repoCard(
+                      "Spoon-Knife",
+                      "This repo is for demonstration purposes only.",
+                    ),
+                  );
+                },
               ),
             ),
+            const SizedBox(height: 16),
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.black,
-        selectedItemColor: Colors.blue,
-        unselectedItemColor: Colors.grey,
-        type: BottomNavigationBarType.fixed,
-        currentIndex: 0,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.notifications_outlined), label: 'Notifications'),
-          BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Explore'),
-          BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: 'Profile'),
-        ],
-      ),
     );
   }
 
-  Widget _buildSection(String title, String count, IconData icon) {
+  Widget _buildTile(String title, String count, IconData icon, Color iconBgColor) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      child: Row(
-        children: [
-          Icon(icon, color: Colors.grey),
-          const SizedBox(width: 16),
-          Text(
-            title,
-            style: const TextStyle(color: Colors.white, fontSize: 16),
-          ),
-          const Spacer(),
-          Text(
-            count,
-            style: const TextStyle(color: Colors.grey),
-          ),
-          const Icon(Icons.chevron_right, color: Colors.grey),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildRepositoryCard(String name, String description, String stars, String language) {
-    return Container(
-      padding: const EdgeInsets.all(16),
+      margin: const EdgeInsets.symmetric(vertical: 0.5),
       decoration: BoxDecoration(
-        color: Colors.grey[900],
-        borderRadius: BorderRadius.circular(8),
+        color: const Color(0xFF1C1C1E),
+        borderRadius: BorderRadius.circular(1),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              CircleAvatar(
-                radius: 12,
-                backgroundImage: NetworkImage(user.avatarUrl),
-              ),
-              const SizedBox(width: 8),
-              Text(
-                user.login,
-                style: const TextStyle(color: Colors.white),
-              ),
-            ],
+      child: ListTile(
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+        leading: Container(
+          width: 36,
+          height: 36,
+          decoration: BoxDecoration(
+            color: iconBgColor,
+            borderRadius: BorderRadius.circular(8),
           ),
-          const SizedBox(height: 12),
-          Text(
-            name,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
+          child: Icon(icon, color: Colors.white),
+        ),
+        title: Text(title, style: const TextStyle(color: Colors.white)),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(count, style: const TextStyle(color: Colors.white)),
+            const SizedBox(width: 4),
+            const Icon(Icons.chevron_right, color: Colors.grey),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _repoCard(String title, String subtitle) {
+    return Container(
+      width: 250,
+      child: Card(
+        color: const Color(0xFF1F1F1F),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        child: ListTile(
+          leading: const CircleAvatar(
+            backgroundImage: AssetImage('assets/octocat.png'),
+          ),
+          title: Text(title,
+              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+          subtitle: Text(subtitle, style: const TextStyle(color: Colors.grey)),
+        ),
+      ),
+    );
+  }
+
+  Widget followButton() {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(12),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+        child: Container(
+          width: double.infinity,
+          height: 48,
+          decoration: BoxDecoration(
+            color: Colors.white.withOpacity(0.08),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: Colors.white.withOpacity(0.2)),
+          ),
+          child: Center(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: const [
+                Icon(Icons.add, color: Colors.white70),
+                SizedBox(width: 6),
+                Text(
+                  "Follow",
+                  style: TextStyle(color: Colors.white70, fontSize: 16),
+                ),
+              ],
             ),
           ),
-          const SizedBox(height: 4),
-          Text(
-            description,
-            style: const TextStyle(color: Colors.grey),
-          ),
-          const SizedBox(height: 12),
-          Row(
-            children: [
-              const Icon(Icons.star_border, color: Colors.grey, size: 16),
-              const SizedBox(width: 4),
-              Text(
-                stars,
-                style: const TextStyle(color: Colors.grey),
-              ),
-              const SizedBox(width: 16),
-              Container(
-                width: 8,
-                height: 8,
-                decoration: const BoxDecoration(
-                  color: Colors.orange,
-                  shape: BoxShape.circle,
-                ),
-              ),
-              const SizedBox(width: 4),
-              Text(
-                language,
-                style: const TextStyle(color: Colors.grey),
-              ),
-            ],
-          ),
-        ],
+        ),
       ),
     );
   }
-} 
+
+}
